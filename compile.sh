@@ -34,7 +34,7 @@ if [ -d $DIR/build ] ; then
 fi
 mkdir -p $DIR/build
 cd $DIR/src/
-javac -g -cp $LIBDIR/lpsolve55j.jar:$LIBDIR/DvRlib.jar -d ../build/ *
+javac -g -cp $LIBDIR/lpsolve55j.jar:$LIBDIR/DvRlib.jar -d ../build/ cuttingstock/*
 if [ "$?" != "0" ] ; then
    echo " *** Error(s) while compiling source; Aborting..."
    exit

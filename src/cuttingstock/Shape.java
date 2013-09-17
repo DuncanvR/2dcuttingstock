@@ -1,7 +1,7 @@
 /**
  * 2D Cutting stock
  * Copyright (C) 2013 DuncanvR
- * Main.java
+ * Shape.java
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,14 +17,26 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class Main {
+package cuttingstock;
 
-   public static void main(String[] args) {
-      if(args.length == 1)
-         new Solver(new Problem(new java.io.File(args[0]), true)).solve();
-      else {
-         System.out.println("Cutting stock optimiser");
-         System.out.println("Usage: java -jar cuttingstock.jar PROBLEMFILE");
-      }
+public class Shape {
+   protected final int    id, width, height;
+   protected final String name;
+
+   public Shape(int id, int width, int height, String name) {
+      this.id     = id;
+      this.width  = width;
+      this.height = height;
+      this.name   = name;
+   }
+
+   @Override
+   public int hashCode() {
+      return 893 + 949363 * id + 90 * width + 19 * height;
+   }
+
+   @Override
+   public String toString() {
+      return "Shape#" + id + ": " + width + "x" + height;
    }
 }
