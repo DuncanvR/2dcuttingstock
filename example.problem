@@ -1,0 +1,8 @@
+# Cutting_loss Resource_width Resource_height
+2 2440 1220
+# Count Shape_width Shape_height Name
+2 800  450 A
+2 2250 450 B
+1 2250 800 C
+2 2100 450 D
+1 2100 800 E
