@@ -26,4 +26,4 @@ while([ -L $SCRIPT ]) do
 done
 
 # Run the program
-LD_LIBRARY_PATH=./lib java -cp ./lib/lpsolve55j.jar:./lib/DvRlib.jar:./build/ Main "$@"
+LD_LIBRARY_PATH=./lib java -jar ./dist/cuttingstock.jar "$@"

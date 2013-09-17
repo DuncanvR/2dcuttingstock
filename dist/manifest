@@ -1,0 +1,2 @@
+Main-Class: cuttingstock.Main
+Class-Path: ../lib/lpsolve55j.jar ../lib/DvRlib.jar

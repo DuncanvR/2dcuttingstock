@@ -65,5 +65,15 @@ if [ -d $DIR/test-src ] ; then
    fi
 fi
 
+# Package
+echo " *** Packaging..."
+mkdir -p $DIR/dist
+cd $DIR/dist
+jar cfm cuttingstock.jar manifest -C ../build/ cuttingstock
+if [ "$?" != "0" ] ; then
+   echo " *** Error(s) while packaging; Aborting"
+   exit
+fi
+
 # Done
 echo " *** Done"
