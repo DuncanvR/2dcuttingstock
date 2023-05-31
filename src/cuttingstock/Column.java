@@ -77,10 +77,10 @@ public class Column {
       for(java.util.Map.Entry<Loc, Shape> e : map.entrySet()) {
          Loc l2 = e.getKey();
          Shape s2 = e.getValue();
-         if(l2.x - l.x  - (l.turn  ? s.height  : s.width)   - problem.cuttingLoss < 0 &&
-            l.x  - l2.x - (l2.turn ? s2.height : s2.width)  - problem.cuttingLoss < 0 &&
-            l2.y - l.y  - (l.turn  ? s.width   : s.height)  - problem.cuttingLoss < 0 &&
-            l.y  - l2.y - (l2.turn ? s2.width  : s2.height) - problem.cuttingLoss < 0)
+         if(l2.x - l.x  - (l.turn  ? s.height  : s.width)   < problem.cuttingLoss &&
+            l.x  - l2.x - (l2.turn ? s2.height : s2.width)  < problem.cuttingLoss &&
+            l2.y - l.y  - (l.turn  ? s.width   : s.height)  < problem.cuttingLoss &&
+            l.y  - l2.y - (l2.turn ? s2.width  : s2.height) < problem.cuttingLoss)
             return false;
       }
       return true;
