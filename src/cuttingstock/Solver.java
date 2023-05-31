@@ -25,13 +25,14 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-public class Solver {
+public class Solver implements AutoCloseable {
    protected final LpSolve         lp;
    protected final Problem         problem;
    protected final HashSet<Column> columns = new HashSet<Column>();
 
    protected HashMap<Shape, Double> duals    = new HashMap<Shape, Double>();
    protected boolean                integral = false;
+   protected boolean                closed   = false;
 
    public Solver(Problem problem) {
       LpSolve lp = null;
@@ -170,10 +171,12 @@ public class Solver {
       return !dualsOld.equals(duals);
    }
 
-   //--- java.lang.Object methods
+   //--- java.lang.AutoCloseable
    @Override
-   protected void finalize() throws Throwable {
-      if(lp != null)
+   public void close() {
+      if(!closed && lp != null) {
          lp.deleteLp();
+         closed = true;
+      }
    }
 }

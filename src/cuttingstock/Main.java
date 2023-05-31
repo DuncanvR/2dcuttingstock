@@ -22,8 +22,11 @@ package cuttingstock;
 public class Main {
 
    public static void main(String[] args) {
-      if(args.length == 1)
-         new Solver(new Problem(new java.io.File(args[0]), true)).solve();
+      if(args.length == 1) {
+         try(Solver solver = new Solver(new Problem(new java.io.File(args[0]), true))) {
+            solver.solve();
+         }
+      }
       else {
          System.out.println("Cutting stock optimiser");
          System.out.println("Usage: java -jar cuttingstock.jar PROBLEMFILE");
