@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/sh
 
 # 2D Cutting stock - Compile script
 # Copyright (C) DuncanvR, 2012-2013
@@ -34,7 +34,7 @@ if [ -d $DIR/build ] ; then
 fi
 mkdir -p $DIR/build
 cd $DIR/src/
-javac -g -cp $LIBDIR/lpsolve55j.jar:$LIBDIR/DvRlib.jar -d ../build/ cuttingstock/*
+javac -g -cp $LIBDIR/lpsolve55j.jar:$LIBDIR/DvRlib.jar -d ../build/ cuttingstock/* -Xlint:deprecation -Xlint:unchecked
 if [ "$?" != "0" ] ; then
    echo " *** Error(s) while compiling source; Aborting..."
    exit
