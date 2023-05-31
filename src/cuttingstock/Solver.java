@@ -112,7 +112,7 @@ public class Solver implements AutoCloseable {
    }
 
    public void printSolution() throws LpSolveException {
-      System.out.println("   Number of needed sheets: " + lp.getObjective());
+      System.out.println("   Number of needed sheets: " + (integral ? Long.toString(Math.round(lp.getObjective())) : Double.toString(lp.getObjective())));
       double[] var = lp.getPtrVariables();
       for(int i = 0, c = 1; i < var.length; i++) {
          if(var[i] > 0d) {
@@ -135,13 +135,14 @@ public class Solver implements AutoCloseable {
 
    public void solve() {
       try {
-         System.out.println("Solving...");
+         System.out.println("Solving as fractional problem...");
          solveLP();
          while(price()) ;
 
          System.out.println("Fractional solution:");
          printSolution();
 
+         System.out.println("Solving as integral problem...");
          integral = true;
          for(int i = 1; i <= lp.getNcolumns(); i++) {
             lp.setBinary(i, true);

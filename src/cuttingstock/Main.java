@@ -23,7 +23,7 @@ public class Main {
 
    public static void main(String[] args) {
       if(args.length == 1) {
-         try(Solver solver = new Solver(new Problem(new java.io.File(args[0]), true))) {
+         try(Solver solver = new Solver(new Problem(new java.io.File(args[0])))) {
             solver.solve();
          }
       }

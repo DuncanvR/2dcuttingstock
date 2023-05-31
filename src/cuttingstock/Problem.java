@@ -31,10 +31,9 @@ public class Problem {
                  resourceHeight = 0;
    protected final Vector<Shape> shapes = new Vector<Shape>();
 
-   public Problem(java.io.File file, boolean print) {
+   public Problem(java.io.File file) {
       try {
-         if(print)
-            System.out.println("Problem:");
+         System.out.println("Problem:");
 
          Scanner in = new Scanner(file), line = new Scanner(in.nextLine());
          // Skip comments
@@ -42,17 +41,14 @@ public class Problem {
             line = new Scanner(in.nextLine());
          // Read resource size
          cuttingLoss = line.nextInt();
-         if(print)
-            System.out.println("   Cutting loss: " + cuttingLoss);
+         System.out.println("   Cutting loss: " + cuttingLoss);
 
          resourceWidth = line.nextInt();
          resourceHeight = line.nextInt();
-         if(print)
-            System.out.println("   Resources: " + resourceWidth + "x" + resourceHeight);
+         System.out.println("   Resources: " + resourceWidth + "x" + resourceHeight);
 
          int id = 1;
-         if(print)
-            System.out.println("   Shapes:");
+         System.out.println("   Shapes:");
          while(in.hasNext()) {
             line = new Scanner(in.nextLine());
             if(!line.hasNext(Comment)) {
@@ -60,8 +56,7 @@ public class Problem {
                    w = line.nextInt(),
                    h = line.nextInt();
                String n = line.hasNext() ? line.nextLine().trim() : "";
-               if(print)
-                  System.out.println("      " + c + " times " + w + "x" + h + ":\t" + n);
+               System.out.println("      " + c + " * " + w + "x" + h + ":\t" + n);
                for(int i = 0; i < c; i++) {
                   shapes.add(new Shape(id++, w, h, n));
                }
