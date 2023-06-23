@@ -19,6 +19,7 @@
 
 package cuttingstock;
 
+import java.util.function.Consumer;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
@@ -87,64 +88,24 @@ public class Column {
    }
 
    /**
-    * Tries to arrange all the given shapes into a new column and returns it, or <code>null</code> if no column can be made.
-    */
-   public static Column construct(Problem problem, Shape shapes[]) {
-      for(Shape[] ss : new dvrlib.generic.RandomOrder<Shape[]>(dvrlib.algorithm.SubSets.permutations(shapes))) {
-         Column c = new Column(problem);
-         if(!construct(c, ss, 0))
-            continue;
-
-         for(Shape s : ss) {
-            if(!c.map.containsValue(s)) {
-               System.out.print("Shapes: [");
-               for(Shape s2 : ss) {
-                  System.out.print(" " + s2);
-               }
-               System.out.println(" ]");
-               System.out.println("Constructed " + c);
-               throw new RuntimeException("Missing " + s);
-            }
-         }
-
-         return c;
-      }
-      return null;
-   }
-
-   protected static boolean construct(Column c, Shape ss[], int i) {
-      if(i < ss.length) {
-         HashSet<Loc> locs = c.possibleLocs(ss[i]);
-         for(Loc l : locs) {
-            c.map.put(l, ss[i]);
-            if(construct(c, ss, i + 1))
-               return true;
-            else
-               c.map.remove(l);
-         }
-         return false;
-      }
-      return true;
-   }
-
-   /**
     * Returns all possible locations the given shape could be placed in this column.
     */
-   protected HashSet<Loc> possibleLocs(Shape s) {
+   public HashSet<Loc> possibleLocs(Shape s) {
       HashSet<Loc> locs = new HashSet<Loc>();
+      Consumer<Loc> tryLoc = (Loc l) -> { if(check(l, s)) { locs.add(l); } };
       // Check resource bounds
       int xmax  = problem.resourceWidth - s.width,
           xmaxt = problem.resourceWidth - s.height,
           ymax  = problem.resourceHeight - s.height,
           ymaxt = problem.resourceHeight - s.width;
-      possibleLocs(new Loc(0,     0,     false), s, locs);
-      possibleLocs(new Loc(0,     0,     true),  s, locs);
-      possibleLocs(new Loc(xmax,  0,     false), s, locs);
-      possibleLocs(new Loc(xmaxt, 0,     true),  s, locs);
-      possibleLocs(new Loc(0,     ymax,  false), s, locs);
-      possibleLocs(new Loc(0,     ymaxt, true),  s, locs);
-      possibleLocs(new Loc(xmax,  ymax,  false), s, locs);
-      possibleLocs(new Loc(xmaxt, ymaxt, true),  s, locs);
+      tryLoc.accept(new Loc(0,     0,     false));
+      tryLoc.accept(new Loc(0,     0,     true));
+      tryLoc.accept(new Loc(xmax,  0,     false));
+      tryLoc.accept(new Loc(xmaxt, 0,     true));
+      tryLoc.accept(new Loc(0,     ymax,  false));
+      tryLoc.accept(new Loc(0,     ymaxt, true));
+      tryLoc.accept(new Loc(xmax,  ymax,  false));
+      tryLoc.accept(new Loc(xmaxt, ymaxt, true));
       // Check sides of already present shapes
       for(Entry<Loc, Shape> e : map.entrySet()) {
          Loc l = e.getKey();
@@ -175,54 +136,49 @@ public class Column {
              y3  = l.y + otherHeight - s.height,
              y3t = l.y + otherHeight - s.width,
              y4  = l.y + otherHeight + problem.cuttingLoss;
-         possibleLocs(new Loc(x1,  y2,  false), s, locs); // a
-         possibleLocs(new Loc(x1t, y2,  true),  s, locs); // a
-         possibleLocs(new Loc(x1,  y1,  false), s, locs); // b
-         possibleLocs(new Loc(x1t, y1t, true),  s, locs); // b
-         possibleLocs(new Loc(x2,  y1,  false), s, locs); // c
-         possibleLocs(new Loc(x2,  y1t, true),  s, locs); // c
-         possibleLocs(new Loc(x3,  y1,  false), s, locs); // d
-         possibleLocs(new Loc(x3t, y1t, true),  s, locs); // d
-         possibleLocs(new Loc(x4,  y1,  false), s, locs); // e
-         possibleLocs(new Loc(x4,  y1t, true),  s, locs); // e
-         possibleLocs(new Loc(x4,  y2,  false), s, locs); // f
-         possibleLocs(new Loc(x4,  y2,  true),  s, locs); // f
-         possibleLocs(new Loc(x4,  y3,  false), s, locs); // g
-         possibleLocs(new Loc(x4,  y3t, true),  s, locs); // g
-         possibleLocs(new Loc(x4,  y4,  false), s, locs); // h
-         possibleLocs(new Loc(x4,  y4,  true),  s, locs); // h
-         possibleLocs(new Loc(x3,  y4,  false), s, locs); // i
-         possibleLocs(new Loc(x3t, y4,  true),  s, locs); // i
-         possibleLocs(new Loc(x2,  y4,  false), s, locs); // j
-         possibleLocs(new Loc(x2,  y4,  true),  s, locs); // j
-         possibleLocs(new Loc(x1,  y4,  false), s, locs); // k
-         possibleLocs(new Loc(x1t, y4,  true),  s, locs); // k
-         possibleLocs(new Loc(x1,  y3,  false), s, locs); // l
-         possibleLocs(new Loc(x1t, y3t, true),  s, locs); // l
+         tryLoc.accept(new Loc(x1,  y2,  false)); // a
+         tryLoc.accept(new Loc(x1t, y2,  true));  // a
+         tryLoc.accept(new Loc(x1,  y1,  false)); // b
+         tryLoc.accept(new Loc(x1t, y1t, true));  // b
+         tryLoc.accept(new Loc(x2,  y1,  false)); // c
+         tryLoc.accept(new Loc(x2,  y1t, true));  // c
+         tryLoc.accept(new Loc(x3,  y1,  false)); // d
+         tryLoc.accept(new Loc(x3t, y1t, true));  // d
+         tryLoc.accept(new Loc(x4,  y1,  false)); // e
+         tryLoc.accept(new Loc(x4,  y1t, true));  // e
+         tryLoc.accept(new Loc(x4,  y2,  false)); // f
+         tryLoc.accept(new Loc(x4,  y2,  true));  // f
+         tryLoc.accept(new Loc(x4,  y3,  false)); // g
+         tryLoc.accept(new Loc(x4,  y3t, true));  // g
+         tryLoc.accept(new Loc(x4,  y4,  false)); // h
+         tryLoc.accept(new Loc(x4,  y4,  true));  // h
+         tryLoc.accept(new Loc(x3,  y4,  false)); // i
+         tryLoc.accept(new Loc(x3t, y4,  true));  // i
+         tryLoc.accept(new Loc(x2,  y4,  false)); // j
+         tryLoc.accept(new Loc(x2,  y4,  true));  // j
+         tryLoc.accept(new Loc(x1,  y4,  false)); // k
+         tryLoc.accept(new Loc(x1t, y4,  true));  // k
+         tryLoc.accept(new Loc(x1,  y3,  false)); // l
+         tryLoc.accept(new Loc(x1t, y3t, true));  // l
 
-         possibleLocs(new Loc(0,     y1,    false), s, locs);
-         possibleLocs(new Loc(0,     y1t,   true),  s, locs);
-         possibleLocs(new Loc(0,     y4,    false), s, locs);
-         possibleLocs(new Loc(0,     y4,    true),  s, locs);
-         possibleLocs(new Loc(xmax,  y1,    false), s, locs);
-         possibleLocs(new Loc(xmaxt, y1t,   true),  s, locs);
-         possibleLocs(new Loc(xmax,  y4,    false), s, locs);
-         possibleLocs(new Loc(xmaxt, y4,    true),  s, locs);
-         possibleLocs(new Loc(x1,    0,     false), s, locs);
-         possibleLocs(new Loc(x1t,   0,     true),  s, locs);
-         possibleLocs(new Loc(x4,    0,     false), s, locs);
-         possibleLocs(new Loc(x4,    0,     true),  s, locs);
-         possibleLocs(new Loc(x1,    ymax,  false), s, locs);
-         possibleLocs(new Loc(x1t,   ymaxt, true),  s, locs);
-         possibleLocs(new Loc(x4,    ymax,  false), s, locs);
-         possibleLocs(new Loc(x4,    ymaxt, true),  s, locs);
+         tryLoc.accept(new Loc(0,     y1,    false));
+         tryLoc.accept(new Loc(0,     y1t,   true));
+         tryLoc.accept(new Loc(0,     y4,    false));
+         tryLoc.accept(new Loc(0,     y4,    true));
+         tryLoc.accept(new Loc(xmax,  y1,    false));
+         tryLoc.accept(new Loc(xmaxt, y1t,   true));
+         tryLoc.accept(new Loc(xmax,  y4,    false));
+         tryLoc.accept(new Loc(xmaxt, y4,    true));
+         tryLoc.accept(new Loc(x1,    0,     false));
+         tryLoc.accept(new Loc(x1t,   0,     true));
+         tryLoc.accept(new Loc(x4,    0,     false));
+         tryLoc.accept(new Loc(x4,    0,     true));
+         tryLoc.accept(new Loc(x1,    ymax,  false));
+         tryLoc.accept(new Loc(x1t,   ymaxt, true));
+         tryLoc.accept(new Loc(x4,    ymax,  false));
+         tryLoc.accept(new Loc(x4,    ymaxt, true));
       }
       return locs;
-   }
-
-   protected void possibleLocs(Loc l, Shape s, HashSet<Loc> locs) {
-      if(check(l, s))
-         locs.add(l);
    }
 
    @Override

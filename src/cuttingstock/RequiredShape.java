@@ -1,7 +1,7 @@
 /**
  * 2D Cutting stock
- * Copyright (C) 2013 DuncanvR
- * Shape.java
+ * Copyright (C) 2023 DuncanvR
+ * RequiredShape.java
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,30 +19,23 @@
 
 package cuttingstock;
 
-public class Shape {
-   protected final int    id, width, height, size;
-   protected final String name;
+import dvrlib.generic.Pair;
 
-   public Shape(int id, int width, int height, String name) {
-      this.id     = id;
-      this.width  = width;
-      this.height = height;
-      this.name   = name;
-
-      this.size = width * height;
+public class RequiredShape extends Pair<Shape, Integer> {
+   public RequiredShape(Shape shape, int count) {
+      super(shape, count);
    }
 
-   public int getSize() {
-      return size;
+   public Shape shape() {
+      return this.a;
    }
 
-   @Override
-   public int hashCode() {
-      return 893 + 949363 * id + 90 * width + 19 * height;
+   public int count() {
+      return this.b;
    }
 
    @Override
    public String toString() {
-      return "Shape#" + id + ": " + width + "x" + height;
+      return this.a + " * " + this.b;
    }
 }

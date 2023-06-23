@@ -19,6 +19,7 @@
 
 package cuttingstock;
 
+import dvrlib.generic.Pair;
 import java.util.regex.Pattern;
 import java.util.Scanner;
 import java.util.Vector;
@@ -28,12 +29,13 @@ public class Problem {
 
    protected int cuttingLoss    = 0,
                  resourceWidth  = 0,
-                 resourceHeight = 0;
-   protected final Vector<Shape> shapes = new Vector<Shape>();
+                 resourceHeight = 0,
+                 resourceSize   = 0;
+   protected final Vector<RequiredShape> shapes = new Vector<RequiredShape>();
 
    public Problem(java.io.File file) {
       try {
-         System.out.println("Problem:");
+         Logger.info("Problem:").inBoldYellow().println();
 
          Scanner in = new Scanner(file), line = new Scanner(in.nextLine());
          // Skip comments
@@ -41,14 +43,15 @@ public class Problem {
             line = new Scanner(in.nextLine());
          // Read resource size
          cuttingLoss = line.nextInt();
-         System.out.println("   Cutting loss: " + cuttingLoss);
+         Logger.info("   Cutting loss: " + cuttingLoss).println();
 
-         resourceWidth = line.nextInt();
+         resourceWidth  = line.nextInt();
          resourceHeight = line.nextInt();
-         System.out.println("   Resources: " + resourceWidth + "x" + resourceHeight);
+         resourceSize   = resourceWidth * resourceHeight;
+         Logger.info("   Resources: " + resourceWidth + "x" + resourceHeight).println();
 
          int id = 1;
-         System.out.println("   Shapes:");
+         Logger.info("   Shapes:").println();
          while(in.hasNext()) {
             line = new Scanner(in.nextLine());
             if(!line.hasNext(Comment)) {
@@ -56,15 +59,13 @@ public class Problem {
                    w = line.nextInt(),
                    h = line.nextInt();
                String n = line.hasNext() ? line.nextLine().trim() : "";
-               System.out.println("      " + c + " * " + w + "x" + h + ":\t" + n);
-               for(int i = 0; i < c; i++) {
-                  shapes.add(new Shape(id++, w, h, n));
-               }
+               Logger.info("      " + c + " * " + w + "x" + h + ":\t" + n).println();
+               shapes.add(new RequiredShape(new Shape(id++, w, h, n), c));
             }
          }
       }
       catch(java.io.FileNotFoundException ex) {
-         System.out.println("Indicated problem file not found");
+         Logger.error("Indicated problem file not found").println();
       }
    }
 }
