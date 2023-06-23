@@ -1,7 +1,7 @@
-#!/usr/bin/bash
+#!/bin/sh
 
 # 2D Cutting stock - Run script
-# Copyright (C) DuncanvR, 2013
+# Copyright (C) DuncanvR, 2013-2023
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
